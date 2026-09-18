@@ -10,7 +10,7 @@
   
     /* ---- active nav link ---- */
     var links = document.querySelectorAll(".nav-links a");
-    var sections = ["home","solutions","academy","about","insights","contact"].map(function(id){return document.getElementById(id);});
+    var sections = ["home","about","solutions","academy","insights","contact"].map(function(id){return document.getElementById(id);});
     window.addEventListener("scroll", function(){
       var pos = window.scrollY + 140, current = "home";
       sections.forEach(function(s){ if(s && s.offsetTop <= pos) current = s.id; });
@@ -109,11 +109,40 @@
     });
   
     /* ---- contact form ---- */
-    var form = document.getElementById("contactForm");
-    form.addEventListener("submit", function(e){
-      e.preventDefault();
-      if(!form.checkValidity()){ form.reportValidity(); return; }
-      form.style.display = "none";
-      document.getElementById("formSuccess").classList.add("show");
+  var form = document.getElementById("contactForm");
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    if(!form.checkValidity()){ form.reportValidity(); return; }
+    
+    // Ubah teks tombol saat sedang loading
+    var btn = form.querySelector('button[type="submit"]');
+    var originalBtnContent = btn.innerHTML;
+    btn.innerHTML = 'Mengirim Pesan...';
+    
+    // Ambil semua data dari formulir
+    var formData = new FormData(form);
+    
+    // Kirim data ke server Web3Forms
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: formData
+    })
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+      if(data.success) {
+        // Jika sukses, sembunyikan formulir dan tampilkan pesan sukses
+        form.style.display = "none";
+        document.getElementById("formSuccess").classList.add("show");
+      } else {
+        // Jika gagal dari server
+        alert('Maaf, terjadi kesalahan dari server. Silakan coba lagi.');
+        btn.innerHTML = originalBtnContent;
+      }
+    })
+    .catch(function(error) {
+      // Jika internet putus atau error jaringan
+      alert('Terjadi kesalahan jaringan. Periksa koneksi internet Anda.');
+      btn.innerHTML = originalBtnContent;
     });
+  });
   })();
