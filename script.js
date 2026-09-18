@@ -10,7 +10,7 @@
   
     /* ---- active nav link ---- */
     var links = document.querySelectorAll(".nav-links a");
-    var sections = ["home","about","solutions","academy","insights","contact"].map(function(id){return document.getElementById(id);});
+    var sections = ["home","about","solutions","academy","insights","faq"].map(function(id){return document.getElementById(id);});
     window.addEventListener("scroll", function(){
       var pos = window.scrollY + 140, current = "home";
       sections.forEach(function(s){ if(s && s.offsetTop <= pos) current = s.id; });
