@@ -8,14 +8,23 @@
     window.addEventListener("scroll", onScroll, {passive:true});
     onScroll();
   
-    /* ---- active nav link ---- */
-    var links = document.querySelectorAll(".nav-links a");
-    var sections = ["home","about","solutions","academy","insights","faq"].map(function(id){return document.getElementById(id);});
-    window.addEventListener("scroll", function(){
-      var pos = window.scrollY + 140, current = "home";
-      sections.forEach(function(s){ if(s && s.offsetTop <= pos) current = s.id; });
-      links.forEach(function(a){ a.classList.toggle("active", a.getAttribute("href") === "#"+current); });
-    }, {passive:true});
+    /* ---- active nav link (Multi-page) ---- */
+  var links = document.querySelectorAll(".nav-links a");
+  // Ambil nama file dari URL saat ini (misal: academy.html)
+  var path = window.location.pathname;
+  var page = path.split("/").pop();
+  
+  // Jika URL kosong (hanya localhost/), anggap sedang di index.html
+  if (page === "") page = "index.html"; 
+
+  links.forEach(function(link) {
+    // Hapus class active dari semua menu
+    link.classList.remove("active");
+    // Tambahkan class active hanya pada menu yang href-nya cocok dengan halaman saat ini
+    if (link.getAttribute("href") === page) {
+      link.classList.add("active");
+    }
+  });
   
     /* ---- mobile menu ---- */
     var burger = document.getElementById("hamburger");
