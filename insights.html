@@ -24,7 +24,7 @@
           <li><a href="about.html">Tentang Kami</a></li>
           <li><a href="solutions.html">Solusi</a></li>
           <li><a href="academy.html">Akademi AI</a></li>
-          <li><a href="insights.html">Wawasan</a></li>
+          <li><a href="insights.html" class="active">Wawasan</a></li>
           <li><a href="faq.html">FAQ</a></li>
         </ul>
       </nav>
@@ -50,7 +50,7 @@
   </div>
   
 <!-- ================= WAWASAN ================= -->
-<section class="section" id="insights">
+<section class="section" id="insights" style="padding-top: 140px; min-height: 70vh;">
     <div class="container">
       <div class="section-head reveal" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;max-width:none;flex-wrap:wrap">
         <div>
@@ -58,51 +58,33 @@
           <h2 class="h2">Pemikiran tentang AI, Selangkah Lebih Maju</h2>
           <p class="lead">Perspektif mengenai AI agen, otomatisasi, kecerdasan data, dan strategi membangun tim yang siap menghadapi era AI.</p>
         </div>
-        <a href="#contact" class="btn btn-outline">Lihat Semua Artikel</a>
       </div>
-      <div class="ins-grid">
+      
+      <!-- ID wadahArtikelPublik ditambahkan di sini agar JS bisa menemukan tempat mencetak artikel -->
+      <div class="ins-grid" id="wadahArtikelPublik">
+        
+        <!-- Artikel contoh (dummy) dibiarkan sebagai fallback saat loading, nanti akan otomatis dihapus/diganti oleh JS -->
         <article class="ins-card reveal" data-delay="1">
           <div class="ins-visual">
             <svg viewBox="0 0 400 170" preserveAspectRatio="none"><rect width="400" height="170" fill="#0E2138"/><g stroke="#00EFFF" stroke-opacity=".35"><path d="M0 130 60 100 120 118 180 70 240 88 300 40 360 60 400 30" fill="none" stroke-width="1.6"/><path d="M0 145 60 128 120 138 180 105 240 118 300 80 360 95 400 70" fill="none" stroke-width="1" stroke-opacity=".2"/><circle cx="180" cy="70" r="4" fill="#00EFFF" stroke="none"/><circle cx="300" cy="40" r="4" fill="#FF6D00" stroke="none"/></g></svg>
-            <span class="ins-cat">AI Agen</span>
+            <span class="ins-cat">Memuat Data...</span>
           </div>
           <div class="ins-body">
-            <h3>Apa Itu AI Agen (Agentic AI) dan Mengapa Ini Penting?</h3>
-            <p>Melampaui sekadar chatbot: bagaimana agen AI yang dapat menalar, merencanakan, dan bertindak mengubah apa yang dapat diotomatisasi oleh organisasi.</p>
-            <span class="ins-meta">Membaca 8 menit · Kecerdasan Buatan</span>
+            <h3>Sedang memuat artikel dari database...</h3>
+            <p>Mohon tunggu sebentar.</p>
           </div>
         </article>
-        <article class="ins-card reveal" data-delay="2">
-          <div class="ins-visual">
-            <svg viewBox="0 0 400 170" preserveAspectRatio="none"><rect width="400" height="170" fill="#0E2138"/><g stroke="#00EFFF" stroke-opacity=".35" fill="none"><rect x="50" y="90" width="50" height="50" rx="6" stroke-width="1.4"/><rect x="140" y="60" width="50" height="80" rx="6" stroke-width="1.4"/><rect x="230" y="35" width="50" height="105" rx="6" stroke-width="1.4" stroke="#FF6D00"/><rect x="320" y="20" width="50" height="120" rx="6" stroke-width="1.4"/><path d="M100 112h40M190 96h40M280 82h40" stroke-dasharray="4 4" stroke-width="1.2"/></g></svg>
-            <span class="ins-cat">Otomatisasi</span>
-          </div>
-          <div class="ins-body">
-            <h3>Dari Alur Kerja Manual Menuju Otomatisasi Cerdas</h3>
-            <p>Kerangka kerja praktis untuk mengidentifikasi proses mana yang harus diotomatisasi terlebih dahulu — dan bagaimana melakukannya dengan benar.</p>
-            <span class="ins-meta">Membaca 6 menit · Otomatisasi</span>
-          </div>
-        </article>
-        <article class="ins-card reveal" data-delay="3">
-          <div class="ins-visual">
-            <svg viewBox="0 0 400 170" preserveAspectRatio="none"><rect width="400" height="170" fill="#0E2138"/><g stroke="#00EFFF" stroke-opacity=".4" fill="none" stroke-width="1.4"><circle cx="200" cy="85" r="46"/><circle cx="200" cy="85" r="24"/><circle cx="200" cy="39" r="5" fill="#00EFFF" stroke="none"/><circle cx="246" cy="85" r="5" fill="#00EFFF" stroke="none"/><circle cx="200" cy="131" r="5" fill="#FF6D00" stroke="none"/><circle cx="154" cy="85" r="5" fill="#00EFFF" stroke="none"/><path d="M200 44v17M241 85h-17M200 126v-17M159 85h17" stroke-dasharray="3 3"/></g></svg>
-            <span class="ins-cat">Keahlian AI</span>
-          </div>
-          <div class="ins-body">
-            <h3>Keterampilan AI yang Wajib Dimiliki Profesional Modern</h3>
-            <p>Mulai dari literasi prompt hingga pemikiran alur kerja — kapabilitas yang membedakan pengguna AI biasa dengan ahli AI.</p>
-            <span class="ins-meta">Membaca 7 menit · Keahlian AI</span>
-          </div>
-        </article>
+
       </div>
     </div>
   </section>
+
 <!-- ================= FOOTER ================= -->
 <footer>
     <div class="container">
       <div class="foot-grid">
         <div class="foot-brand">
-          <a href="#home" class="logo">
+          <a href="index.html" class="logo">
             <img src="assets/logo-nexus.png" alt="Logo Nexus" class="logo-mark" style="max-height:40px;width:auto;flex:none">
             <span>NEXUS INTELLIGENCE</span>
           </a>
@@ -110,15 +92,15 @@
         </div>
         <div class="foot-col">
           <h4>Solusi</h4>
-          <ul><li><a href="#solutions">Otomatisasi</a></li><li><a href="#solutions">AI Agen</a></li><li><a href="#solutions">Analisis Data AI</a></li><li><a href="#academy">Pemberdayaan AI</a></li></ul>
+          <ul><li><a href="solutions.html">Otomatisasi</a></li><li><a href="solutions.html">AI Agen</a></li><li><a href="solutions.html">Analisis Data AI</a></li><li><a href="academy.html">Pemberdayaan AI</a></li></ul>
         </div>
         <div class="foot-col">
           <h4>Akademi</h4>
-          <ul><li><a href="#academy">Fundamental AI</a></li><li><a href="#academy">Produktivitas AI</a></li><li><a href="#academy">Otomatisasi</a></li><li><a href="#academy">AI Agen</a></li><li><a href="#academy">Analisis Data</a></li></ul>
+          <ul><li><a href="academy.html">Fundamental AI</a></li><li><a href="academy.html">Produktivitas AI</a></li><li><a href="academy.html">Otomatisasi</a></li><li><a href="academy.html">AI Agen</a></li><li><a href="academy.html">Analisis Data</a></li></ul>
         </div>
         <div class="foot-col">
           <h4>Perusahaan</h4>
-          <ul><li><a href="#about">Tentang Kami</a></li><li><a href="#insights">Wawasan</a></li><li><a href="#faq">FAQ</a></li></ul>
+          <ul><li><a href="about.html">Tentang Kami</a></li><li><a href="insights.html">Wawasan</a></li><li><a href="faq.html">FAQ</a></li></ul>
         </div>
         <div class="foot-col">
           <h4>Ikuti Kami</h4>
@@ -131,11 +113,64 @@
       </div>
     </div>
   </footer>
+
   <!-- ================= WHATSAPP FLOAT ================= -->
   <a href="https://wa.me/6285810132938" class="wa-float" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
   </a>
   
+  <!-- ================= PUSTAKA SUPABASE & LOGIKA DATA ================= -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = 'https://pccfhsmbaqucxnbzqazl.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjY2Zoc21iYXF1Y3huYnpxYXpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwNTg3OTUsImV4cCI6MjEwNTYzNDc5NX0.8izYxsyRjayd1mssCRd_RVchYsG6lsOC2fS1Z_MKP-Y';
+    const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+  
+    async function tampilkanArtikel() {
+      const wadah = document.getElementById('wadahArtikelPublik');
+      if (!wadah) return;
+  
+      // Tarik artikel dari Supabase
+      const { data, error } = await supabaseClient
+        .from('artikel')
+        .select('*')
+        .order('created_at', { ascending: false });
+  
+      if (error || data.length === 0) {
+        wadah.innerHTML = '<p style="color:var(--muted); grid-column: 1 / -1; text-align: center;">Belum ada artikel yang dipublikasikan.</p>';
+        return;
+      }
+  
+      // Kosongkan artikel dummy bawaan HTML
+      wadah.innerHTML = ''; 
+  
+      // Cetak artikel asli dari database
+      data.forEach((artikel, index) => {
+        const kata = artikel.konten ? artikel.konten.split(' ').length : 0;
+        const waktuBaca = Math.max(1, Math.ceil(kata / 200));
+  
+        const elemen = document.createElement('article');
+        elemen.className = 'ins-card reveal visible';
+        elemen.setAttribute('data-delay', (index % 3) + 1);
+        
+        elemen.innerHTML = `
+          <div class="ins-visual">
+            <div style="width:100%; height:100%; background: linear-gradient(135deg, var(--deep-3), var(--cyan-dim));"></div>
+            <span class="ins-cat">Berita</span>
+          </div>
+          <div class="ins-body">
+            <h3>${artikel.judul}</h3>
+            <p>${artikel.konten.substring(0, 110)}...</p>
+            <span class="ins-meta" style="margin-top:auto; padding-top:15px; display:block;">${waktuBaca} min read · Oleh ${artikel.penulis}</span>
+          </div>
+        `;
+        wadah.appendChild(elemen);
+      });
+    }
+  
+    tampilkanArtikel();
+  </script>
+
   <!-- Memanggil file JS yang sudah dipisah -->
   <script src="script.js"></script>
   </body>

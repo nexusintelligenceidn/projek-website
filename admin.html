@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dasbor Admin | PT Nexus Intelligence Indonesia</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<!-- Memanggil gaya dasar website -->
+<link rel="stylesheet" href="style.css">
+<style>
+  /* Penyesuaian tata letak khusus area admin */
+  body { background: var(--deep); padding-top: 90px; padding-bottom: 60px; }
+  .admin-nav { background: rgba(11,25,44,.95); border-bottom: 1px solid var(--border); position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 15px 0; }
+  .admin-nav .container { display: flex; justify-content: space-between; align-items: center; }
+  .admin-container { max-width: 1000px; margin: 0 auto; padding: 0 20px; display: grid; gap: 40px; }
+  
+  .admin-card { background: rgba(18,42,71,.4); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px; box-shadow: 0 10px 30px rgba(0,0,0,.2); }
+  .admin-card h2 { font-size: 1.4rem; margin-bottom: 24px; color: var(--cyan); border-bottom: 1px solid var(--border-cyan); padding-bottom: 12px; }
+  
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .full-width { grid-column: 1 / -1; }
+  .f-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .f-group input, .f-group textarea { width: 100%; background: rgba(11,25,44,.7); border: 1px solid var(--border); border-radius: 8px; padding: 12px 15px; color: var(--ice); font-family: inherit; }
+  .f-group input:focus, .f-group textarea:focus { outline: none; border-color: var(--cyan); }
+  
+  .artikel-list { display: flex; flex-direction: column; gap: 16px; }
+  .artikel-item { background: rgba(11,25,44,.6); border: 1px solid var(--border); padding: 16px 20px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+  .artikel-item:hover { border-color: var(--cyan); }
+  .artikel-item h4 { margin-bottom: 4px; font-size: 1.05rem; color: var(--ice); }
+  .artikel-item small { color: var(--muted); font-size: 0.85rem; }
+  
+  .btn-sm { padding: 8px 16px; font-size: 0.85rem; }
+  .btn-danger { background: rgba(255, 60, 60, 0.1); color: #ff6b6b; border: 1px solid rgba(255, 60, 60, 0.3); border-radius: 6px; padding: 8px 14px; cursor: pointer; transition: 0.3s; font-weight: 600; font-size: 0.8rem; }
+  .btn-danger:hover { background: #ff6b6b; color: #fff; }
+</style>
+</head>
+<body>
+
+<header class="admin-nav">
+  <div class="container">
+    <div class="logo">
+      <img src="assets/logo-nexus.png" alt="Logo Nexus" class="logo-mark" style="max-height:30px;width:auto;">
+      <span style="margin-left:12px; font-size:1rem; font-weight:700; color:var(--ice);">DASBOR ADMIN</span>
+    </div>
+    <button id="btnLogout" class="btn btn-outline btn-sm">Keluar (Logout)</button>
+  </div>
+</header>
+
+<div class="admin-container">
+  <!-- Area Form Tambah Artikel -->
+  <div class="admin-card">
+    <h2>Tulis Artikel Baru</h2>
+    <form id="formArtikel">
+      <div class="form-grid">
+        <div class="f-group full-width">
+          <label for="judul">Judul Artikel</label>
+          <input type="text" id="judul" required placeholder="Contoh: Masa Depan Otomatisasi AI">
+        </div>
+        <div class="f-group">
+          <label for="penulis">Nama Penulis</label>
+          <input type="text" id="penulis" required placeholder="Contoh: Tim Nexus">
+        </div>
+        <div class="f-group">
+          <label for="gambar_url">Tautan Gambar Sampul (URL)</label>
+          <input type="url" id="gambar_url" required placeholder="https://sumbergambar.com/gambar.jpg">
+        </div>
+        <div class="f-group full-width">
+          <label for="konten">Konten Artikel</label>
+          <textarea id="konten" required placeholder="Tulis isi artikel secara lengkap di sini..." style="min-height: 250px; resize: vertical;"></textarea>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" id="btnSubmit">
+        Publikasikan Artikel
+        <svg width="15" height="12" viewBox="0 0 16 12" fill="none" style="margin-left: 8px;"><path d="M1 6h13M10 1l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </form>
+  </div>
+
+  <!-- Area Daftar Artikel -->
+  <div class="admin-card">
+    <h2>Daftar Artikel Tersimpan</h2>
+    <div id="daftarArtikel" class="artikel-list">
+      <p style="color: var(--muted); font-size: 0.9rem;">Memuat data dari database...</p>
+    </div>
+  </div>
+</div>
+
+<!-- Pustaka Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    // 1. Inisialisasi Database
+    const supabaseUrl = 'https://pccfhsmbaqucxnbzqazl.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjY2Zoc21iYXF1Y3huYnpxYXpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwNTg3OTUsImV4cCI6MjEwNTYzNDc5NX0.8izYxsyRjayd1mssCRd_RVchYsG6lsOC2fS1Z_MKP-Y';
+    
+    // NAMA VARIABEL DIUBAH MENJADI supabaseClient
+    const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+  
+    // 2. Keamanan: Cek Sesi Login
+    async function cekSesi() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session) {
+        window.location.replace('login.html');
+      }
+    }
+    cekSesi();
+  
+    // 3. Fungsi Keluar (Logout)
+    document.getElementById('btnLogout').addEventListener('click', async () => {
+      await supabaseClient.auth.signOut();
+      window.location.replace('login.html');
+    });
+  
+    // 4. Tarik Data Artikel dari Database
+    async function muatArtikel() {
+      const wadahArtikel = document.getElementById('daftarArtikel');
+      
+      const { data, error } = await supabaseClient
+        .from('artikel')
+        .select('*')
+        .order('created_at', { ascending: false });
+  
+      if (error) {
+        wadahArtikel.innerHTML = '<p style="color:#ff6b6b;">Terjadi kesalahan saat memuat artikel.</p>';
+        return;
+      }
+  
+      if (data.length === 0) {
+        wadahArtikel.innerHTML = '<p style="color:var(--muted);">Belum ada artikel yang dipublikasikan.</p>';
+        return;
+      }
+  
+      wadahArtikel.innerHTML = ''; 
+      data.forEach(artikel => {
+        // Format tanggal agar mudah dibaca
+        const tgl = new Date(artikel.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        
+        const elemen = document.createElement('div');
+        elemen.className = 'artikel-item';
+        elemen.innerHTML = `
+          <div>
+            <h4>${artikel.judul}</h4>
+            <small>${tgl} · Oleh ${artikel.penulis}</small>
+          </div>
+          <button class="btn-danger" onclick="hapusArtikel('${artikel.id}')">Hapus</button>
+        `;
+        wadahArtikel.appendChild(elemen);
+      });
+    }
+    
+    // Langsung panggil fungsi saat dasbor terbuka
+    muatArtikel();
+  
+    // 5. Kirim Artikel Baru ke Database
+    const form = document.getElementById('formArtikel');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const btnSubmit = document.getElementById('btnSubmit');
+      btnSubmit.textContent = 'Menyimpan...';
+      btnSubmit.disabled = true;
+  
+      // Kumpulkan data dari form
+      const dataBaru = {
+        judul: document.getElementById('judul').value,
+        penulis: document.getElementById('penulis').value,
+        gambar_url: document.getElementById('gambar_url').value,
+        konten: document.getElementById('konten').value
+      };
+  
+      // Sisipkan ke tabel Supabase
+      const { error } = await supabaseClient.from('artikel').insert([dataBaru]);
+  
+      if (error) {
+        alert('Gagal memublikasikan artikel: ' + error.message);
+      } else {
+        alert('Artikel berhasil dipublikasikan!');
+        form.reset(); // Kosongkan form
+        muatArtikel(); // Muat ulang daftar di bawah
+      }
+      
+      // Kembalikan tombol ke kondisi semula
+      btnSubmit.innerHTML = 'Publikasikan Artikel <svg width="15" height="12" viewBox="0 0 16 12" fill="none" style="margin-left: 8px;"><path d="M1 6h13M10 1l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      btnSubmit.disabled = false;
+    });
+  
+    // 6. Fungsi Hapus Artikel
+    async function hapusArtikel(id) {
+      if(confirm('Apakah Anda yakin ingin menghapus artikel ini secara permanen?')) {
+        const { error } = await supabaseClient.from('artikel').delete().eq('id', id);
+        if(error) {
+          alert('Gagal menghapus: ' + error.message);
+        } else {
+          muatArtikel();
+        }
+      }
+    }
+  </script>
+</body>
+</html>

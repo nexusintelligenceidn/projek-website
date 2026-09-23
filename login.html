@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Portal | PT Nexus Intelligence Indonesia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"> 
+<style>
+  /* Tata letak khusus untuk memusatkan form login */
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: var(--deep);
+    margin: 0;
+    padding: 20px;
+  }
+  .login-wrapper {
+    width: 100%;
+    max-width: 440px;
+  }
+  .login-card {
+    background: rgba(18,42,71,.4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 48px 40px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.4);
+    text-align: center;
+  }
+  .login-logo {
+    display: inline-flex;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .login-card h2 {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    color: var(--ice);
+  }
+  .login-card p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 36px;
+  }
+  .login-form {
+    text-align: left;
+  }
+  .f-group {
+    margin-bottom: 22px;
+  }
+  .btn-login {
+    width: 100%;
+    justify-content: center;
+    padding: 16px;
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+  .back-link {
+    display: inline-block;
+    margin-top: 32px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    transition: color .25s;
+    text-align: center;
+    width: 100%;
+  }
+  .back-link:hover {
+    color: var(--cyan);
+  }
+  /* Wadah untuk pesan error dari Supabase nanti */
+  .alert-error {
+    display: none;
+    background: rgba(255, 60, 60, 0.1);
+    border: 1px solid rgba(255, 60, 60, 0.3);
+    color: #ff6b6b;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+  <div class="login-wrapper">
+    <div class="login-card reveal visible">
+      <a href="index.html" class="login-logo">
+        <!-- Memanggil aset logo yang sama -->
+        <img src="assets/logo-nexus.png" alt="Logo Nexus" style="max-height:52px;width:auto;">
+      </a>
+      <h2>Portal Admin</h2>
+      <p>Masuk untuk mengelola artikel Wawasan dan konten website.</p>
+      
+      <!-- Wadah pesan error yang akan dimanipulasi oleh JS/Supabase -->
+      <div class="alert-error" id="loginError">
+        Email atau kata sandi tidak valid.
+      </div>
+
+      <form class="login-form" id="adminLoginForm">
+        <div class="f-group">
+          <label for="adminEmail">Alamat Email</label>
+          <!-- Class ini akan meminjam gaya CSS dari form di halaman contact.html -->
+          <input type="email" id="adminEmail" required placeholder="admin@nexusintelligence.id">
+        </div>
+        <div class="f-group">
+          <label for="adminPassword">Kata Sandi</label>
+          <input type="password" id="adminPassword" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-primary btn-login">
+          Login ke Dasbor
+          <svg width="15" height="12" viewBox="0 0 16 12" fill="none" style="margin-left: 8px;">
+            <path d="M1 6h13M10 1l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </form>
+    </div>
+    
+    <a href="index.html" class="back-link">← Kembali ke Beranda Utama</a>
+  </div>
+<!-- Memanggil pustaka Supabase dari CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const supabaseUrl = 'https://pccfhsmbaqucxnbzqazl.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjY2Zoc21iYXF1Y3huYnpxYXpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwNTg3OTUsImV4cCI6MjEwNTYzNDc5NX0.8izYxsyRjayd1mssCRd_RVchYsG6lsOC2fS1Z_MKP-Y';
+    
+    // NAMA VARIABEL DIUBAH MENJADI supabaseClient
+    const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+  
+    const loginForm = document.getElementById('adminLoginForm');
+    const loginError = document.getElementById('loginError');
+  
+    loginForm.addEventListener('submit', async function(e) {
+      e.preventDefault(); 
+      loginError.style.display = 'none';
+      
+      const emailValue = document.getElementById('adminEmail').value;
+      const passwordValue = document.getElementById('adminPassword').value;
+      
+      const btnSubmit = loginForm.querySelector('.btn-login');
+      const originalBtnText = btnSubmit.innerHTML;
+      btnSubmit.innerHTML = 'Memproses...';
+      btnSubmit.disabled = true;
+  
+      // MENGGUNAKAN supabaseClient UNTUK MEMANGGIL API
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: emailValue,
+        password: passwordValue,
+      });
+  
+      if (error) {
+        loginError.style.display = 'block';
+        loginError.textContent = 'Login gagal: Email atau kata sandi salah.';
+        btnSubmit.innerHTML = originalBtnText;
+        btnSubmit.disabled = false;
+      } else {
+        window.location.href = 'admin.html';
+      }
+    });
+  </script>
+</body>
+</html>

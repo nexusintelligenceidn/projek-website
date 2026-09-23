@@ -555,24 +555,135 @@
     html{scroll-behavior:auto}
     .reveal{opacity:1;transform:none}
   }
-  /* =========================================
-   PENYESUAIAN UKURAN PARAGRAF (OUTFIT)
-   ========================================= */
+    /* =========================================
+    PENYESUAIAN UKURAN PARAGRAF (OUTFIT)
+    ========================================= */
 
-/* 1. Memperbesar teks deskripsi utama (di bawah judul) */
-.lead {
-  font-size: clamp(1.1rem, 1.5vw, 1.25rem);
-}
+  /* 1. Memperbesar teks deskripsi utama (di bawah judul) */
+  .lead {
+    font-size: clamp(1.1rem, 1.5vw, 1.25rem);
+  }
 
-/* 2. Memperbesar teks paragraf di dalam semua kartu/kotak */
-.pillar p, 
-.sol-card > p, 
-.aud-card p, 
-.prog-card p, 
-.why-card p, 
-.ins-body p, 
-.j-step p,
-.fw-body p {
-  font-size: 1.1rem; 
-  line-height: 1.8;
-}
+  /* 2. Memperbesar teks paragraf di dalam semua kartu/kotak */
+  .pillar p, 
+  .sol-card > p, 
+  .aud-card p, 
+  .prog-card p, 
+  .why-card p, 
+  .ins-body p, 
+  .j-step p,
+  .fw-body p {
+    font-size: 1.1rem; 
+    line-height: 1.8;
+  }
+  /* ---------- PRODUCT AUTOMATION PAGE ---------- */
+  .prod-hero {
+    background: var(--deep);
+    padding: calc(var(--nav-h) + 60px) 0 80px;
+    color: #fff;
+  }
+  .prod-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .prod-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .pf-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  .workflow-box {
+    border: 1px solid rgba(11,25,44,.1);
+    border-radius: 16px;
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 40px;
+    background: #F8F9FA;
+  }
+  .pricing-layout {
+    display: grid;
+    grid-template-columns: 2.2fr 1fr;
+    gap: 40px;
+    margin-bottom: 80px;
+  }
+  .price-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .p-card {
+    background: #fff;
+    border: 1px solid rgba(11,25,44,.1);
+    border-radius: 16px;
+    padding: 30px 24px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .p-card.popular {
+    border: 2px solid #3B82F6;
+    box-shadow: 0 10px 30px rgba(59,130,246,0.15);
+  }
+  .badge-pop {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #3B82F6;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+  .p-card h3 { font-size: 1.2rem; margin-bottom: 4px; }
+  .p-desc { font-size: 0.8rem; color: #6E8299; margin-bottom: 20px; min-height: 38px;}
+  .p-price { font-size: 1.6rem; font-weight: 700; font-family: var(--font-display); }
+  .p-term { font-size: 0.8rem; color: #10B981; font-weight: 600; margin-bottom: 24px; }
+  .p-card.popular .p-term { color: #3B82F6; }
+  .p-features { list-style: none; margin-bottom: 30px; }
+  .p-features li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.85rem; color: #4A5B70; margin-bottom: 12px; line-height: 1.4; }
+  .p-features svg { flex: none; width: 16px; height: 16px; margin-top: 2px; }
+
+  .maint-main {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .m-card {
+    background: #fff;
+    border: 1px solid rgba(11,25,44,.1);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+  }
+  .m-icon {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex: none;
+  }
+  .m-card h4 { font-size: 1rem; margin-bottom: 4px; }
+  .m-price { font-size: 1.1rem; font-weight: 700; color: #10B981; margin-bottom: 8px; }
+  .m-price span { font-size: 0.75rem; font-weight: 400; color: #6E8299; }
+  .m-card ul { list-style: none; }
+  .m-card li { font-size: 0.8rem; color: #4A5B70; margin-bottom: 4px; position: relative; padding-left: 12px; }
+  .m-card li::before { content:"•"; position: absolute; left: 0; color: currentColor; }
+
+  @media(max-width: 1024px) {
+    .pricing-layout { grid-template-columns: 1fr; }
+  }
+  @media(max-width: 820px) {
+    .prod-hero-grid { grid-template-columns: 1fr; }
+    .workflow-box { grid-template-columns: 1fr; }
+    .price-grid { grid-template-columns: 1fr; }
+  }
