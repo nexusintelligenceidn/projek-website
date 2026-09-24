@@ -49,7 +49,10 @@
     document.querySelectorAll(".reveal").forEach(function(el){ io.observe(el); });
   
     /* ---- hero network canvas ---- */
-    var canvas = document.getElementById("network-canvas");
+  var canvas = document.getElementById("network-canvas");
+  
+  // TAMBAHKAN PENGECEKAN INI: Jalankan hanya jika canvas ditemukan di halaman
+  if (canvas) { 
     var ctx = canvas.getContext("2d");
     var nodes = [], W = 0, H = 0, mouse = {x:-9999,y:-9999};
     function resize(){
@@ -107,6 +110,7 @@
       mouse.y = (e.clientY - r.top)*devicePixelRatio;
     });
     canvas.parentElement.addEventListener("mouseleave", function(){ mouse.x = mouse.y = -9999; });
+  } // <-- PENUTUP BLOK IF CANVAS
   
     /* ---- solution card glow follows cursor ---- */
     document.querySelectorAll(".sol-card").forEach(function(card){

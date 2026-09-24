@@ -9,6 +9,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css"> 
+<style>
+  /* Tambahan CSS khusus untuk transisi halaman baca */
+  .view-area { animation: fadeIn 0.5s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .baca-kembali { display: inline-flex; align-items: center; gap: 8px; color: var(--cyan); margin-bottom: 30px; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
+  .baca-kembali:hover { transform: translateX(-5px); }
+</style>
 </head>
 <body>
 <!-- ================= NAVIGASI ================= -->
@@ -50,33 +57,49 @@
   </div>
   
 <!-- ================= WAWASAN ================= -->
-<section class="section" id="insights" style="padding-top: 140px; min-height: 70vh;">
+<section class="section" id="insights-section" style="padding-top: 140px; min-height: 70vh;">
     <div class="container">
-      <div class="section-head reveal" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;max-width:none;flex-wrap:wrap">
-        <div>
-          <span class="eyebrow">Wawasan</span>
-          <h2 class="h2">Pemikiran tentang AI, Selangkah Lebih Maju</h2>
-          <p class="lead">Perspektif mengenai AI agen, otomatisasi, kecerdasan data, dan strategi membangun tim yang siap menghadapi era AI.</p>
+      
+      <!-- TAMPILAN 1: DAFTAR KOTAK ARTIKEL -->
+      <div id="view-daftar" class="view-area" style="display: none;">
+        <div class="section-head reveal" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;max-width:none;flex-wrap:wrap">
+          <div>
+            <span class="eyebrow">Wawasan</span>
+            <h2 class="h2">Pemikiran tentang AI, Selangkah Lebih Maju</h2>
+            <p class="lead">Perspektif mengenai AI agen, otomatisasi, kecerdasan data, dan strategi membangun tim yang siap menghadapi era AI.</p>
+          </div>
+        </div>
+        
+        <div class="ins-grid" id="wadahArtikelPublik">
+          <article class="ins-card reveal" data-delay="1">
+            <div class="ins-visual">
+              <span class="ins-cat">Memuat Data...</span>
+            </div>
+            <div class="ins-body">
+              <h3>Sedang memuat artikel dari database...</h3>
+              <p>Mohon tunggu sebentar.</p>
+            </div>
+          </article>
         </div>
       </div>
-      
-      <!-- ID wadahArtikelPublik ditambahkan di sini agar JS bisa menemukan tempat mencetak artikel -->
-      <div class="ins-grid" id="wadahArtikelPublik">
-        
-        <!-- Artikel contoh (dummy) dibiarkan sebagai fallback saat loading, nanti akan otomatis dihapus/diganti oleh JS -->
-        <article class="ins-card reveal" data-delay="1">
-          <div class="ins-visual">
-            <svg viewBox="0 0 400 170" preserveAspectRatio="none"><rect width="400" height="170" fill="#0E2138"/><g stroke="#00EFFF" stroke-opacity=".35"><path d="M0 130 60 100 120 118 180 70 240 88 300 40 360 60 400 30" fill="none" stroke-width="1.6"/><path d="M0 145 60 128 120 138 180 105 240 118 300 80 360 95 400 70" fill="none" stroke-width="1" stroke-opacity=".2"/><circle cx="180" cy="70" r="4" fill="#00EFFF" stroke="none"/><circle cx="300" cy="40" r="4" fill="#FF6D00" stroke="none"/></g></svg>
-            <span class="ins-cat">Memuat Data...</span>
-          </div>
-          <div class="ins-body">
-            <h3>Sedang memuat artikel dari database...</h3>
-            <p>Mohon tunggu sebentar.</p>
-          </div>
-        </article>
 
-      </div>
-    </div>
+      <!-- TAMPILAN 2: BACA ARTIKEL FULL -->
+<div id="view-baca" class="view-area" style="display: none; max-width: 1000px; margin: 0 auto; text-align: left; padding-bottom: 60px;">
+  <a href="insights.html" class="baca-kembali">&larr; Kembali ke Daftar Artikel</a>
+  
+  <div id="loading-baca" style="color: var(--muted); padding: 40px 0; text-align: center;">Memuat isi artikel...</div>
+  
+  <div id="konten-baca" style="display: none;">
+    <h1 id="baca-judul" style="font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 700; margin-bottom: 16px; color: var(--ice); line-height: 1.3;"></h1>
+    
+    <div id="baca-meta" style="color: var(--muted); font-size: 0.9rem; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border);"></div>
+    
+    <img id="baca-gambar" src="" alt="Cover Artikel" style="width: 100%; height: auto; max-height: 500px; object-fit: cover; border-radius: 16px; margin-bottom: 40px; border: 1px solid var(--border); display: none;">
+    
+    <!-- white-space: pre-wrap membaca enter; text-align: justify/left memastikan teks rapi -->
+    <div id="baca-teks" style="color: var(--ice); font-size: 1.05rem; line-height: 1.8; white-space: pre-wrap; text-align: left;"></div>
+  </div>
+</div>
   </section>
 
 <!-- ================= FOOTER ================= -->
@@ -126,11 +149,25 @@
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjY2Zoc21iYXF1Y3huYnpxYXpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwNTg3OTUsImV4cCI6MjEwNTYzNDc5NX0.8izYxsyRjayd1mssCRd_RVchYsG6lsOC2fS1Z_MKP-Y';
     const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
   
+    // Logika Pengatur Tampilan (Router)
+    const urlParams = new URLSearchParams(window.location.search);
+    const idArtikel = urlParams.get('id');
+
+    if (idArtikel) {
+      document.getElementById('view-daftar').style.display = 'none';
+      document.getElementById('view-baca').style.display = 'block';
+      muatArtikelFull(idArtikel);
+    } else {
+      document.getElementById('view-daftar').style.display = 'block';
+      document.getElementById('view-baca').style.display = 'none';
+      tampilkanArtikel();
+    }
+
+    // Fungsi: Menampilkan Daftar Artikel (Grid)
     async function tampilkanArtikel() {
       const wadah = document.getElementById('wadahArtikelPublik');
       if (!wadah) return;
   
-      // Tarik artikel dari Supabase
       const { data, error } = await supabaseClient
         .from('artikel')
         .select('*')
@@ -141,34 +178,65 @@
         return;
       }
   
-      // Kosongkan artikel dummy bawaan HTML
       wadah.innerHTML = ''; 
   
-      // Cetak artikel asli dari database
       data.forEach((artikel, index) => {
         const kata = artikel.konten ? artikel.konten.split(' ').length : 0;
         const waktuBaca = Math.max(1, Math.ceil(kata / 200));
+        
+        // Cek apakah ada gambar URL dari database, jika tidak pakai tampilan default
+        const gambarVisual = artikel.gambar_url 
+          ? `<img src="${artikel.gambar_url}" alt="Cover" style="width:100%; height:100%; object-fit:cover;">`
+          : `<div style="width:100%; height:100%; background: linear-gradient(135deg, var(--deep-3), var(--cyan-dim));"></div>`;
   
         const elemen = document.createElement('article');
         elemen.className = 'ins-card reveal visible';
         elemen.setAttribute('data-delay', (index % 3) + 1);
         
         elemen.innerHTML = `
-          <div class="ins-visual">
-            <div style="width:100%; height:100%; background: linear-gradient(135deg, var(--deep-3), var(--cyan-dim));"></div>
-            <span class="ins-cat">Berita</span>
+          <div class="ins-visual" style="height: 190px;">
+            ${gambarVisual}
+            <span class="ins-cat">Wawasan</span>
           </div>
-          <div class="ins-body">
-            <h3>${artikel.judul}</h3>
-            <p>${artikel.konten.substring(0, 110)}...</p>
-            <span class="ins-meta" style="margin-top:auto; padding-top:15px; display:block;">${waktuBaca} min read · Oleh ${artikel.penulis}</span>
+          <div class="ins-body" style="display:flex; flex-direction:column;">
+            <h3 style="margin-bottom:8px;">${artikel.judul}</h3>
+            <p style="font-size:0.85rem; color:var(--muted); margin-bottom:15px;">${artikel.konten.substring(0, 110)}...</p>
+            <span class="ins-meta" style="margin-bottom: 20px;">${waktuBaca} min read · Oleh ${artikel.penulis}</span>
+            <a href="insights.html?id=${artikel.id}" class="btn btn-outline" style="width: 100%; justify-content: center; margin-top: auto;">Baca Selengkapnya</a>
           </div>
         `;
         wadah.appendChild(elemen);
       });
     }
-  
-    tampilkanArtikel();
+
+    // Fungsi: Menampilkan Artikel Penuh
+    async function muatArtikelFull(id) {
+      const { data, error } = await supabaseClient
+        .from('artikel')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error || !data) {
+        document.getElementById('loading-baca').innerText = "Gagal memuat artikel atau artikel tidak ditemukan.";
+        return;
+      }
+
+      document.getElementById('loading-baca').style.display = 'none';
+      document.getElementById('konten-baca').style.display = 'block';
+
+      document.getElementById('baca-judul').innerText = data.judul;
+      const tgl = new Date(data.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+      document.getElementById('baca-meta').innerText = `${tgl} · Oleh ${data.penulis}`;
+      
+      if (data.gambar_url) {
+        const imgElemen = document.getElementById('baca-gambar');
+        imgElemen.src = data.gambar_url;
+        imgElemen.style.display = 'block';
+      }
+
+      document.getElementById('baca-teks').innerText = data.konten;
+    }
   </script>
 
   <!-- Memanggil file JS yang sudah dipisah -->

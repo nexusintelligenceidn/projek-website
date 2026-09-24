@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Membaca Artikel - Nexus Intelligence</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body style="padding-top: 100px;">
+  
+  <div class="container" style="max-width: 800px; margin: 0 auto; background: var(--deep-2); padding: 40px; border-radius: var(--radius); border: 1px solid var(--border);">
+    <a href="index.html" class="sol-link" style="margin-bottom: 20px; display: inline-block;">&larr; Kembali ke Beranda</a>
+    
+    <h1 id="judul-artikel">Memuat judul...</h1>
+    
+    <img id="gambar-artikel" src="" alt="" style="width: 100%; height: 400px; object-fit: cover; border-radius: 12px; margin: 20px 0; display: none;">
+    
+    <div id="konten-artikel" style="color: var(--muted); font-size: 1.05rem; line-height: 1.8;">
+      Sedang mengambil data dari server...
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // LOGIKA UNTUK MENAMPILKAN ARTIKEL BERDASARKAN ID
+    async function muatArtikel() {
+      // 1. Ambil ID dari URL (misal: ?id=5)
+      const urlParams = new URLSearchParams(window.location.search);
+      const idArtikel = urlParams.get('id');
+
+      if (!idArtikel) {
+        document.getElementById('konten-artikel').innerText = "Artikel tidak ditemukan.";
+        return;
+      }
+
+      // 2. Ambil data spesifik dari Supabase berdasarkan ID
+      const { data, error } = await supabase
+        .from('artikel')
+        .select('*')
+        .eq('id', idArtikel)
+        .single(); // Ambil 1 data saja
+
+      if (error || !data) {
+        document.getElementById('konten-artikel').innerText = "Gagal memuat artikel.";
+        return;
+      }
+
+      // 3. Masukkan data ke dalam HTML
+      document.getElementById('judul-artikel').innerText = data.judul;
+      
+      const imgElemen = document.getElementById('gambar-artikel');
+      if(data.gambar_url) {
+        imgElemen.src = data.gambar_url;
+        imgElemen.style.display = 'block';
+      }
+
+      // Gunakan innerHTML agar format paragraf atau baris baru (enter) terbaca
+      document.getElementById('konten-artikel').innerHTML = data.konten_full;
+    }
+
+    muatArtikel();
+  </script>
+</body>
+</html>

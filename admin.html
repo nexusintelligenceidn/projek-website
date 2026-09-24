@@ -45,7 +45,6 @@
     <button id="btnLogout" class="btn btn-outline btn-sm">Keluar (Logout)</button>
   </div>
 </header>
-
 <div class="admin-container">
   <!-- Area Form Tambah Artikel -->
   <div class="admin-card">
@@ -56,25 +55,38 @@
           <label for="judul">Judul Artikel</label>
           <input type="text" id="judul" required placeholder="Contoh: Masa Depan Otomatisasi AI">
         </div>
+        
         <div class="f-group">
           <label for="penulis">Nama Penulis</label>
           <input type="text" id="penulis" required placeholder="Contoh: Tim Nexus">
         </div>
+        
+        <!-- FITUR BARU: Upload Gambar dari Laptop -->
         <div class="f-group">
-          <label for="gambar_url">Tautan Gambar Sampul (URL)</label>
-          <input type="url" id="gambar_url" required placeholder="https://sumbergambar.com/gambar.jpg">
+          <label for="fileGambar">Upload Foto Sampul</label>
+          <input type="file" id="fileGambar" accept="image/png, image/jpeg, image/webp" required style="padding: 10px; cursor: pointer; background: rgba(11,25,44,.7); border: 1px solid var(--border); border-radius: 9px; width: 100%; color: var(--ice);">
         </div>
+        
+        <!-- FITUR BARU: Upload Materi Teks -->
+        <div class="f-group full-width">
+          <label for="fileMateri">Upload Materi Artikel (.txt / .md)</label>
+          <input type="file" id="fileMateri" accept=".txt, .md" style="padding: 10px; cursor: pointer; background: rgba(11,25,44,.7); border: 1px solid var(--border); border-radius: 9px; width: 100%; color: var(--ice);">
+          <small style="color:var(--muted-2); font-size:0.75rem; margin-top:6px; display:block;">Opsional: Pilih file Notepad (.txt) dari laptop Anda untuk mengisi kotak konten di bawah secara otomatis.</small>
+        </div>
+        
         <div class="f-group full-width">
           <label for="konten">Konten Artikel</label>
           <textarea id="konten" required placeholder="Tulis isi artikel secara lengkap di sini..." style="min-height: 250px; resize: vertical;"></textarea>
         </div>
       </div>
+      
       <button type="submit" class="btn btn-primary" id="btnSubmit">
         Publikasikan Artikel
         <svg width="15" height="12" viewBox="0 0 16 12" fill="none" style="margin-left: 8px;"><path d="M1 6h13M10 1l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </form>
   </div>
+</div>
 
   <!-- Area Daftar Artikel -->
   <div class="admin-card">
@@ -150,50 +162,98 @@
     // Langsung panggil fungsi saat dasbor terbuka
     muatArtikel();
   
-    // 5. Kirim Artikel Baru ke Database
-    const form = document.getElementById('formArtikel');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const btnSubmit = document.getElementById('btnSubmit');
-      btnSubmit.textContent = 'Menyimpan...';
-      btnSubmit.disabled = true;
+  // --- FITUR BARU: Membaca file materi otomatis ---
+  document.getElementById('fileMateri').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      // Masukkan teks dari file ke dalam kotak konten
+      document.getElementById('konten').value = event.target.result;
+    };
+    reader.readAsText(file); // Membaca isi file .txt
+  });
+// 5. Kirim Artikel & Gambar Baru ke Database
+const form = document.getElementById('formArtikel');
   
-      // Kumpulkan data dari form
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const btnSubmit = document.getElementById('btnSubmit');
+    btnSubmit.textContent = 'Mengunggah & Menyimpan...';
+    btnSubmit.disabled = true;
+
+    try {
+      let imageUrl = '';
+      const fileGambar = document.getElementById('fileGambar').files[0];
+
+      // 1. Proses upload gambar ke Supabase Storage
+      if (fileGambar) {
+        const namaFileUnik = Date.now() + '-' + fileGambar.name.replace(/\s+/g, '-');
+        
+        const { data: uploadData, error: uploadError } = await supabaseClient
+          .storage
+          .from('gambar-artikel') 
+          .upload(namaFileUnik, fileGambar);
+
+        if (uploadError) {
+          throw new Error('Gagal mengunggah gambar: ' + uploadError.message);
+        }
+
+        const { data: publicUrlData } = supabaseClient
+          .storage
+          .from('gambar-artikel')
+          .getPublicUrl(uploadData.path);
+
+        imageUrl = publicUrlData.publicUrl;
+      }
+
+      // 2. Kumpulkan data dari form
       const dataBaru = {
         judul: document.getElementById('judul').value,
         penulis: document.getElementById('penulis').value,
-        gambar_url: document.getElementById('gambar_url').value,
+        gambar_url: imageUrl,
         konten: document.getElementById('konten').value
       };
-  
-      // Sisipkan ke tabel Supabase
-      const { error } = await supabaseClient.from('artikel').insert([dataBaru]);
-  
-      if (error) {
-        alert('Gagal memublikasikan artikel: ' + error.message);
-      } else {
-        alert('Artikel berhasil dipublikasikan!');
-        form.reset(); // Kosongkan form
-        muatArtikel(); // Muat ulang daftar di bawah
+
+      // 3. Masukkan data ke database
+      const { error: insertError } = await supabaseClient
+        .from('artikel')
+        .insert([dataBaru]);
+
+      if (insertError) {
+        throw new Error('Gagal menyimpan artikel: ' + insertError.message);
       }
+
+      alert("Artikel dan gambar berhasil dipublikasikan!");
       
-      // Kembalikan tombol ke kondisi semula
-      btnSubmit.innerHTML = 'Publikasikan Artikel <svg width="15" height="12" viewBox="0 0 16 12" fill="none" style="margin-left: 8px;"><path d="M1 6h13M10 1l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      // 4. Kosongkan form dan perbarui daftar artikel otomatis
+      form.reset(); 
+      muatArtikel(); 
+
+    } catch (error) {
+      console.error("Terjadi kesalahan:", error);
+      alert(error.message);
+    } finally {
+      // 5. Kembalikan tombol ke kondisi semula (baik saat sukses maupun gagal)
+      btnSubmit.innerHTML = `Publikasikan Artikel <svg width="15" height="12" viewBox="0 0 16 12" fill="none" style="margin-left: 8px;"><path d="M1 6h13M10 1l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
       btnSubmit.disabled = false;
-    });
-  
-    // 6. Fungsi Hapus Artikel
-    async function hapusArtikel(id) {
-      if(confirm('Apakah Anda yakin ingin menghapus artikel ini secara permanen?')) {
-        const { error } = await supabaseClient.from('artikel').delete().eq('id', id);
-        if(error) {
-          alert('Gagal menghapus: ' + error.message);
-        } else {
-          muatArtikel();
-        }
+    }
+  });
+
+  // 6. Fungsi Hapus Artikel (Berada di luar agar bisa dipanggil oleh tombol HTML)
+  async function hapusArtikel(id) {
+    if(confirm('Apakah Anda yakin ingin menghapus artikel ini secara permanen?')) {
+      const { error } = await supabaseClient.from('artikel').delete().eq('id', id);
+      if(error) {
+        alert('Gagal menghapus: ' + error.message);
+      } else {
+        muatArtikel(); // Muat ulang daftar setelah berhasil dihapus
       }
     }
+  }
+</script>
   </script>
 </body>
 </html>

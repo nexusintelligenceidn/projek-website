@@ -519,42 +519,65 @@
     70% { box-shadow: 0 0 0 15px rgba(37,211,102,0); }
     100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
   }
-  
   /* ---------- responsive ---------- */
-  @media(max-width:1024px){
-    .hero-inner{grid-template-columns:1fr;gap:20px}
-    .hero-visual{height:380px;max-width:520px;margin:0 auto;width:100%}
-    .strip-grid,.aud-grid{grid-template-columns:repeat(2,1fr)}
-    .why-grid{grid-template-columns:repeat(3,1fr)}
-    .ind-grid{grid-template-columns:repeat(3,1fr)}
-    .foot-grid{grid-template-columns:1fr 1fr 1fr;row-gap:44px}
-  }
-  @media(max-width:820px){
-    .nav-links,.nav .btn{display:none}
-    .hamburger{display:flex}
-    .about-grid,.contact-grid{grid-template-columns:1fr;gap:44px}
-    .sol-grid,.prog-grid,.ins-grid{grid-template-columns:1fr}
-    .journey-line{display:none}
-    .journey-grid{grid-template-columns:1fr;gap:26px}
-    .j-step{display:flex;gap:18px;text-align:left;align-items:flex-start}
-    .j-dot{margin:0;flex:none}
-    .stats-grid{grid-template-columns:repeat(2,1fr)}
-    .why-grid,.ind-grid{grid-template-columns:repeat(2,1fr)}
-    .form-row{grid-template-columns:1fr}
-  }
-  @media(max-width:560px){
-    .strip-grid,.aud-grid,.why-grid,.ind-grid{grid-template-columns:1fr}
-    .hero-ctas .btn{width:100%;justify-content:center}
-    .cta-ctas .btn{width:100%;justify-content:center}
-    .foot-grid{grid-template-columns:1fr 1fr}
-    .hv-ring.r1{width:300px;height:300px}.hv-ring.r2{width:230px;height:230px}.hv-ring.r3{width:160px;height:160px}
-    .form{padding:26px 20px}
-  }
-  @media(prefers-reduced-motion:reduce){
-    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
-    html{scroll-behavior:auto}
-    .reveal{opacity:1;transform:none}
-  }
+
+/* Tambahan: Memastikan video/iframe tidak terpotong dan selalu menyesuaikan lebar layar */
+video, iframe {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+@media(max-width:1024px){
+  .hero-inner{grid-template-columns:1fr;gap:20px}
+  .hero-visual{height:380px;max-width:520px;margin:0 auto;width:100%}
+  .strip-grid,.aud-grid{grid-template-columns:repeat(2,1fr)}
+  .why-grid{grid-template-columns:repeat(3,1fr)}
+  .ind-grid{grid-template-columns:repeat(3,1fr)}
+  .foot-grid{grid-template-columns:1fr 1fr 1fr;row-gap:44px}
+}
+@media(max-width:820px){
+  .nav-links,.nav .btn{display:none}
+  .hamburger{display:flex}
+  .about-grid,.contact-grid{grid-template-columns:1fr;gap:44px}
+  .sol-grid,.prog-grid,.ins-grid{grid-template-columns:1fr}
+  .journey-line{display:none}
+  .journey-grid{grid-template-columns:1fr;gap:26px}
+  .j-step{display:flex;gap:18px;text-align:left;align-items:flex-start}
+  .j-dot{margin:0;flex:none}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .why-grid,.ind-grid{grid-template-columns:repeat(2,1fr)}
+  .form-row{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .strip-grid,.aud-grid,.why-grid,.ind-grid{grid-template-columns:1fr}
+  .hero-ctas .btn{width:100%;justify-content:center}
+  .cta-ctas .btn{width:100%;justify-content:center}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .hv-ring.r1{width:300px;height:300px}.hv-ring.r2{width:230px;height:230px}.hv-ring.r3{width:160px;height:160px}
+  .form{padding:26px 20px}
+}
+
+/* --- TAMBAHAN BARU: Khusus untuk layar HP Kecil (maks 480px) --- */
+@media(max-width:480px){
+  /* Memperkecil animasi lingkaran agar tidak meluber */
+  .hv-ring.r1{width:260px;height:260px}
+  .hv-ring.r2{width:200px;height:200px}
+  .hv-ring.r3{width:140px;height:140px}
+  
+  /* Menyesuaikan ukuran teks judul */
+  .hero h1{font-size:2.3rem}
+  
+  /* Merapikan jarak antar elemen */
+  .about-grid,.contact-grid{gap:32px}
+  .sol-card{padding:28px 20px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+}
     /* =========================================
     PENYESUAIAN UKURAN PARAGRAF (OUTFIT)
     ========================================= */
