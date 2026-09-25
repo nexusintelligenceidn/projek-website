@@ -4,51 +4,182 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dasbor Admin | PT Nexus Intelligence Indonesia</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-<!-- Memanggil gaya dasar website -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
-  /* Penyesuaian tata letak khusus area admin */
-  body { background: var(--deep); padding-top: 90px; padding-bottom: 60px; }
-  .admin-nav { background: rgba(11,25,44,.95); border-bottom: 1px solid var(--border); position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 15px 0; }
-  .admin-nav .container { display: flex; justify-content: space-between; align-items: center; }
-  .admin-container { max-width: 1000px; margin: 0 auto; padding: 0 20px; display: grid; gap: 40px; }
+  :root {
+    --deep: #0B192C; --deep-2: #0E2138; --deep-3: #122A47;
+    --cyan: #00EFFF; --orange: #FF6D00; --ice: #F8F9FA;
+    --muted: #9FB2C8; --border: rgba(0,239,255,.15);
+    --font-main: 'Inter', sans-serif; --font-display: 'Space Grotesk', sans-serif;
+  }
   
-  .admin-card { background: rgba(18,42,71,.4); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px; box-shadow: 0 10px 30px rgba(0,0,0,.2); }
-  .admin-card h2 { font-size: 1.4rem; margin-bottom: 24px; color: var(--cyan); border-bottom: 1px solid var(--border-cyan); padding-bottom: 12px; }
+  * { margin:0; padding:0; box-sizing:border-box; font-family:var(--font-main); }
+  body { background:var(--deep); color:var(--ice); line-height:1.6; padding-bottom:60px;}
+  a { text-decoration:none; color:inherit; }
+  button { cursor:pointer; font-family:inherit; border:none; outline:none; }
+
+  /* Navbar Admin */
+  .admin-nav {
+    background:var(--deep-2); border-bottom:1px solid var(--border);
+    padding:16px 5%; display:flex; justify-content:space-between; align-items:center;
+  }
+  .admin-logo { font-family:var(--font-display); font-weight:700; color:var(--ice); display:flex; align-items:center; gap:10px; }
+  .admin-logo span { color:var(--cyan); }
+  .admin-user { font-size:0.85rem; color:var(--muted); display:flex; align-items:center; gap:16px; }
+
+  /* Layout & Views */
+  .container-admin { width:min(1100px, 92%); margin:40px auto; }
+  .view-section { display:none; animation:fadeIn 0.4s ease; }
+  .view-section.active { display:block; }
+  @keyframes fadeIn { from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
+
+  /* Typography */
+  .page-title { font-family:var(--font-display); font-size:1.8rem; margin-bottom:8px; color:var(--cyan); }
+  .page-desc { color:var(--muted); font-size:0.95rem; margin-bottom:32px; }
+
+  /* Buttons */
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 24px; border-radius:8px; font-weight:600; font-size:0.9rem; transition:0.3s; }
+  .btn-sm { padding:8px 16px; font-size:0.85rem; }
   
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
-  .full-width { grid-column: 1 / -1; }
-  .f-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
-  .f-group input, .f-group textarea { width: 100%; background: rgba(11,25,44,.7); border: 1px solid var(--border); border-radius: 8px; padding: 12px 15px; color: var(--ice); font-family: inherit; }
-  .f-group input:focus, .f-group textarea:focus { outline: none; border-color: var(--cyan); }
+  /* Solid Primary Orange */
+  .btn-primary { background:var(--orange); color:var(--deep); }
+  .btn-primary:hover { background:#ff8533; box-shadow:0 0 20px rgba(255,109,0,.4); transform:translateY(-2px); }
+  .btn-primary:disabled { opacity:0.7; cursor:not-allowed; transform:none; box-shadow:none; }
   
-  .artikel-list { display: flex; flex-direction: column; gap: 16px; }
-  .artikel-item { background: rgba(11,25,44,.6); border: 1px solid var(--border); padding: 16px 20px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
-  .artikel-item:hover { border-color: var(--cyan); }
-  .artikel-item h4 { margin-bottom: 4px; font-size: 1.05rem; color: var(--ice); }
-  .artikel-item small { color: var(--muted); font-size: 0.85rem; }
+  /* Outline Buttons */
+  .btn-outline { background:transparent; color:var(--ice); border:1px solid var(--border); }
+  .btn-outline:hover { background:var(--deep-3); }
   
-  .btn-sm { padding: 8px 16px; font-size: 0.85rem; }
-  .btn-danger { background: rgba(255, 60, 60, 0.1); color: #ff6b6b; border: 1px solid rgba(255, 60, 60, 0.3); border-radius: 6px; padding: 8px 14px; cursor: pointer; transition: 0.3s; font-weight: 600; font-size: 0.8rem; }
-  .btn-danger:hover { background: #ff6b6b; color: #fff; }
+  /* Outline Orange Button (Sesuai Request) */
+  .btn-orange { background:transparent; color:var(--orange); border:1px solid rgba(255,109,0,.5); }
+  .btn-orange:hover { background:var(--orange); color:var(--deep); box-shadow:0 0 20px rgba(255,109,0,.3); }
+
+  .btn-danger { background:rgba(255,109,0,.1); color:var(--orange); border:1px solid rgba(255,109,0,.3); }
+  .btn-danger:hover { background:var(--orange); color:var(--deep); }
+
+  /* Dashboard Cards */
+  .dash-stats { display:flex; gap:16px; margin-bottom:32px; flex-wrap:wrap; }
+  .stat-box { background:var(--deep-2); border:1px solid var(--border); border-radius:12px; padding:20px; flex:1; min-width:200px; }
+  .stat-box h4 { color:var(--muted); font-size:0.85rem; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px; }
+  .stat-box .num { font-family:var(--font-display); font-size:2rem; font-weight:700; color:var(--cyan); }
+
+  .menu-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:24px; }
+  .menu-card {
+    background:linear-gradient(160deg, var(--deep-3), var(--deep-2));
+    border:1px solid var(--border); border-radius:16px; padding:32px;
+    transition:all 0.3s; text-align:center;
+  }
+  .menu-card:hover { border-color:var(--cyan); transform:translateY(-5px); box-shadow:0 10px 30px rgba(0,239,255,.1); }
+  .menu-icon { width:64px; height:64px; border-radius:16px; background:rgba(0,239,255,.1); color:var(--cyan); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; }
+  .menu-card h3 { font-size:1.3rem; margin-bottom:10px; }
+  .menu-card p { color:var(--muted); font-size:0.9rem; margin-bottom:24px; }
+
+  /* Table for Manage Articles */
+  .table-wrapper { background:var(--deep-2); border:1px solid var(--border); border-radius:12px; overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; text-align:left; }
+  th, td { padding:16px 20px; border-bottom:1px solid rgba(255,255,255,.05); }
+  th { color:var(--muted); font-size:0.8rem; text-transform:uppercase; letter-spacing:0.1em; background:var(--deep-3); }
+  tr:hover td { background:rgba(255,255,255,.02); }
+  .status { padding:4px 10px; border-radius:100px; font-size:0.75rem; font-weight:600; }
+  .status.publish { background:rgba(0,239,255,.1); color:var(--cyan); }
+  
+  /* Editor Form */
+  .editor-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px;}
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .full-width { grid-column:1 / -1; }
+  .f-group label { display:block; font-size:0.85rem; color:var(--muted); margin-bottom:8px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; }
+  .f-group input, .f-group textarea, .f-group select { 
+    width:100%; padding:14px; background:rgba(11,25,44,.7); 
+    border:1px solid var(--border); border-radius:8px; color:var(--ice); font-family:inherit; 
+  }
+  .f-group input:focus, .f-group textarea:focus, .f-group select:focus { outline:none; border-color:var(--cyan); box-shadow:0 0 0 3px rgba(0,239,255,.1); }
+  .f-group input[type="file"] { cursor:pointer; padding:10px; }
+  
+  .action-btns { display: flex; gap: 8px; }
 </style>
 </head>
 <body>
 
-<header class="admin-nav">
-  <div class="container">
-    <div class="logo">
-      <img src="assets/logo-nexus.png" alt="Logo Nexus" class="logo-mark" style="max-height:30px;width:auto;">
-      <span style="margin-left:12px; font-size:1rem; font-weight:700; color:var(--ice);">DASBOR ADMIN</span>
-    </div>
-    <button id="btnLogout" class="btn btn-outline btn-sm">Keluar (Logout)</button>
+<!-- NAVBAR -->
+<nav class="admin-nav">
+  <div class="admin-logo">
+    <img src="assets/logo-nexus.png" alt="Logo Nexus" style="max-height:28px; width:auto;">
+    NEXUS <span>ADMIN</span>
   </div>
-</header>
-<div class="admin-container">
-  <!-- Area Form Tambah Artikel -->
-  <div class="admin-card">
-    <h2>Tulis Artikel Baru</h2>
+  <div class="admin-user">
+    <a href="index.html" style="color:var(--cyan)">← Kembali ke Web</a>
+    <button id="btnLogout" class="btn btn-orange btn-sm">Keluar</button>
+  </div>
+</nav>
+
+<div class="container-admin">
+  
+  <!-- ================= VIEW 1: DASHBOARD ================= -->
+  <div id="view-dashboard" class="view-section active">
+    <h1 class="page-title">Selamat Datang, Tim Nexus</h1>
+    <p class="page-desc">Pusat kendali konten, wawasan, dan data intelijen.</p>
+    
+    <div class="dash-stats">
+      <div class="stat-box"><h4>Total Artikel Publik</h4><div class="num" id="stat-total">-</div></div>
+      <div class="stat-box"><h4>Status Server DB</h4><div class="num" style="color:#10B981; font-size:1.5rem; margin-top:8px;">Terhubung</div></div>
+    </div>
+
+    <div class="menu-grid">
+      <div class="menu-card">
+        <div class="menu-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/><path d="M14 3v5h5M16 13H8M16 17H8M10 9H8"/></svg></div>
+        <h3>Daftar Artikel</h3>
+        <p>Lihat, edit, atau hapus artikel yang sudah pernah dipublikasikan sebelumnya.</p>
+        <!-- Tombol oranye sesuai request -->
+        <button onclick="switchView('view-manage')" class="btn btn-orange">Kelola Konten</button>
+      </div>
+      <div class="menu-card">
+        <div class="menu-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+        <h3>Tulis Artikel Baru</h3>
+        <p>Buat wawasan, berita, atau panduan baru dengan mengunggah gambar dan materi teks.</p>
+        <button onclick="openEditor()" class="btn btn-primary">Mulai Menulis</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= VIEW 2: DAFTAR ARTIKEL ================= -->
+  <div id="view-manage" class="view-section">
+    <!-- Tombol oranye sesuai request -->
+    <button onclick="switchView('view-dashboard')" class="btn btn-orange btn-sm" style="margin-bottom:24px;">&larr; Kembali ke Dasbor</button>
+    <div class="editor-header">
+      <div>
+        <h1 class="page-title">Daftar Artikel Tersimpan</h1>
+        <p class="page-desc">Kelola semua artikel Anda yang ada di database.</p>
+      </div>
+      <button onclick="openEditor()" class="btn btn-primary">+ Tambah Artikel</button>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Judul Artikel & Penulis</th>
+            <th>Tanggal Dibuat</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="wadahArtikel">
+          <tr><td colspan="4" style="text-align:center; color:var(--muted)">Memuat data dari database...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ================= VIEW 3: EDITOR (TAMBAH / EDIT) ================= -->
+  <div id="view-editor" class="view-section">
+    <!-- Tombol oranye sesuai request -->
+    <button onclick="switchView('view-manage')" class="btn btn-orange btn-sm" style="margin-bottom:24px;">&larr; Batal & Kembali</button>
+    
+    <div class="editor-header">
+      <h1 class="page-title" id="editor-title">Tulis Artikel Baru</h1>
+    </div>
+
     <form id="formArtikel">
       <div class="form-grid">
         <div class="f-group full-width">
@@ -57,203 +188,245 @@
         </div>
         
         <div class="f-group">
-          <label for="penulis">Nama Penulis</label>
+          <label for="penulis">Nama Penulis / Kategori</label>
           <input type="text" id="penulis" required placeholder="Contoh: Tim Nexus">
         </div>
         
-        <!-- FITUR BARU: Upload Gambar dari Laptop -->
         <div class="f-group">
-          <label for="fileGambar">Upload Foto Sampul</label>
-          <input type="file" id="fileGambar" accept="image/png, image/jpeg, image/webp" required style="padding: 10px; cursor: pointer; background: rgba(11,25,44,.7); border: 1px solid var(--border); border-radius: 9px; width: 100%; color: var(--ice);">
+          <label for="fileGambar">Upload Foto Sampul (.jpg, .png)</label>
+          <input type="file" id="fileGambar" accept="image/png, image/jpeg, image/webp" required>
+          <small id="hintGambar" style="color:var(--muted); font-size:0.75rem; margin-top:6px; display:none;">Kosongkan jika tidak ingin mengubah gambar sampul.</small>
         </div>
         
-        <!-- FITUR BARU: Upload Materi Teks -->
         <div class="f-group full-width">
           <label for="fileMateri">Upload Materi Artikel (.txt / .md)</label>
-          <input type="file" id="fileMateri" accept=".txt, .md" style="padding: 10px; cursor: pointer; background: rgba(11,25,44,.7); border: 1px solid var(--border); border-radius: 9px; width: 100%; color: var(--ice);">
-          <small style="color:var(--muted-2); font-size:0.75rem; margin-top:6px; display:block;">Opsional: Pilih file Notepad (.txt) dari laptop Anda untuk mengisi kotak konten di bawah secara otomatis.</small>
+          <input type="file" id="fileMateri" accept=".txt, .md">
+          <small style="color:var(--muted); font-size:0.75rem; margin-top:6px; display:block;">Opsional: Pilih file Notepad untuk mengisi konten otomatis.</small>
         </div>
         
         <div class="f-group full-width">
           <label for="konten">Konten Artikel</label>
-          <textarea id="konten" required placeholder="Tulis isi artikel secara lengkap di sini..." style="min-height: 250px; resize: vertical;"></textarea>
+          <textarea id="konten" required placeholder="Tulis atau paste isi artikel di sini..." style="min-height:300px;"></textarea>
         </div>
       </div>
       
-      <button type="submit" class="btn btn-primary" id="btnSubmit">
-        Publikasikan Artikel
-        <svg width="15" height="12" viewBox="0 0 16 12" fill="none" style="margin-left: 8px;"><path d="M1 6h13M10 1l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
+      <div style="border-top:1px solid var(--border); padding-top:20px; display:flex; justify-content:flex-end;">
+        <button type="submit" class="btn btn-primary" id="btnSubmit">
+          Simpan Artikel
+          <svg width="15" height="12" viewBox="0 0 16 12" fill="none" style="margin-left:8px;"><path d="M1 6h13M10 1l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
     </form>
   </div>
+
 </div>
 
-  <!-- Area Daftar Artikel -->
-  <div class="admin-card">
-    <h2>Daftar Artikel Tersimpan</h2>
-    <div id="daftarArtikel" class="artikel-list">
-      <p style="color: var(--muted); font-size: 0.9rem;">Memuat data dari database...</p>
-    </div>
-  </div>
-</div>
-
-<!-- Pustaka Supabase -->
+<!-- ================= SCRIPT & SUPABASE ================= -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-    // 1. Inisialisasi Database
-    const supabaseUrl = 'https://pccfhsmbaqucxnbzqazl.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjY2Zoc21iYXF1Y3huYnpxYXpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwNTg3OTUsImV4cCI6MjEwNTYzNDc5NX0.8izYxsyRjayd1mssCRd_RVchYsG6lsOC2fS1Z_MKP-Y';
+  // --- 1. INISIALISASI SUPABASE ---
+  const supabaseUrl = 'https://pccfhsmbaqucxnbzqazl.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjY2Zoc21iYXF1Y3huYnpxYXpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwNTg3OTUsImV4cCI6MjEwNTYzNDc5NX0.8izYxsyRjayd1mssCRd_RVchYsG6lsOC2fS1Z_MKP-Y';
+  const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+  // Variabel Global untuk menyimpan status Edit & Data
+  let daftarArtikelGlobal = [];
+  let editId = null;
+
+  // --- 2. KEAMANAN & LOGOUT ---
+  async function cekSesi() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) window.location.replace('login.html');
+  }
+  cekSesi();
+
+  document.getElementById('btnLogout').addEventListener('click', async () => {
+    await supabaseClient.auth.signOut();
+    window.location.replace('login.html');
+  });
+
+  // --- 3. UI NAVIGASI (SPA) ---
+  function switchView(viewId) {
+    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+    document.getElementById(viewId).classList.add('active');
+    window.scrollTo(0, 0);
+    if(viewId === 'view-manage') muatArtikel();
+  }
+
+  // Buka Editor untuk Tulis Baru
+  function openEditor() {
+    editId = null; // Reset status edit
+    document.getElementById('editor-title').innerText = "Tulis Artikel Baru";
+    document.getElementById('formArtikel').reset();
     
-    // NAMA VARIABEL DIUBAH MENJADI supabaseClient
-    const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-  
-    // 2. Keamanan: Cek Sesi Login
-    async function cekSesi() {
-      const { data: { session } } = await supabaseClient.auth.getSession();
-      if (!session) {
-        window.location.replace('login.html');
-      }
-    }
-    cekSesi();
-  
-    // 3. Fungsi Keluar (Logout)
-    document.getElementById('btnLogout').addEventListener('click', async () => {
-      await supabaseClient.auth.signOut();
-      window.location.replace('login.html');
-    });
-  
-    // 4. Tarik Data Artikel dari Database
-    async function muatArtikel() {
-      const wadahArtikel = document.getElementById('daftarArtikel');
-      
-      const { data, error } = await supabaseClient
-        .from('artikel')
-        .select('*')
-        .order('created_at', { ascending: false });
-  
-      if (error) {
-        wadahArtikel.innerHTML = '<p style="color:#ff6b6b;">Terjadi kesalahan saat memuat artikel.</p>';
-        return;
-      }
-  
-      if (data.length === 0) {
-        wadahArtikel.innerHTML = '<p style="color:var(--muted);">Belum ada artikel yang dipublikasikan.</p>';
-        return;
-      }
-  
-      wadahArtikel.innerHTML = ''; 
-      data.forEach(artikel => {
-        // Format tanggal agar mudah dibaca
-        const tgl = new Date(artikel.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-        
-        const elemen = document.createElement('div');
-        elemen.className = 'artikel-item';
-        elemen.innerHTML = `
-          <div>
-            <h4>${artikel.judul}</h4>
-            <small>${tgl} · Oleh ${artikel.penulis}</small>
-          </div>
-          <button class="btn-danger" onclick="hapusArtikel('${artikel.id}')">Hapus</button>
-        `;
-        wadahArtikel.appendChild(elemen);
-      });
-    }
+    // Mewajibkan upload gambar jika artikel baru
+    document.getElementById('fileGambar').required = true;
+    document.getElementById('hintGambar').style.display = "none";
     
-    // Langsung panggil fungsi saat dasbor terbuka
-    muatArtikel();
-  
-  // --- FITUR BARU: Membaca file materi otomatis ---
+    switchView('view-editor');
+  }
+  // Buka Editor untuk Edit Artikel (DIREVISI)
+  function editArtikel(id) {
+    // Gunakan '==' agar String dan Integer tetap bisa dicocokkan
+    const artikel = daftarArtikelGlobal.find(a => a.id == id);
+    
+    if (!artikel) {
+      alert('Gagal memuat data. Artikel tidak ditemukan di memori.');
+      return;
+    }
+
+    editId = artikel.id; // Tandai ID yang sedang diedit
+    document.getElementById('editor-title').innerText = "Edit Artikel";
+    
+    // Isi otomatis form dengan data yang ditarik dari database
+    document.getElementById('judul').value = artikel.judul;
+    document.getElementById('penulis').value = artikel.penulis;
+    document.getElementById('konten').value = artikel.konten;
+    
+    // Gambar bersifat opsional saat diedit (boleh dibiarkan kosong)
+    document.getElementById('fileGambar').required = false;
+    document.getElementById('hintGambar').style.display = "block";
+    
+    switchView('view-editor');
+  }
+
+  // --- 4. BACA FILE TEKS OTOMATIS ---
   document.getElementById('fileMateri').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (!file) return;
-    
     const reader = new FileReader();
     reader.onload = function(event) {
-      // Masukkan teks dari file ke dalam kotak konten
       document.getElementById('konten').value = event.target.result;
     };
-    reader.readAsText(file); // Membaca isi file .txt
+    reader.readAsText(file);
   });
-// 5. Kirim Artikel & Gambar Baru ke Database
-const form = document.getElementById('formArtikel');
-  
+
+  // --- 5. MUAT DATA ARTIKEL (READ) ---
+  async function muatArtikel() {
+    const tbody = document.getElementById('wadahArtikel');
+    
+    const { data, error } = await supabaseClient
+      .from('artikel')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      tbody.innerHTML = `<tr><td colspan="4" style="color:#ff6b6b; text-align:center;">Gagal memuat artikel: ${error.message}</td></tr>`;
+      return;
+    }
+
+    // Simpan data ke memori agar bisa digunakan untuk Edit
+    daftarArtikelGlobal = data;
+    document.getElementById('stat-total').innerText = data.length;
+
+    if (data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4" style="color:var(--muted); text-align:center;">Belum ada artikel. Silakan buat baru.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = ''; 
+    data.forEach(artikel => {
+      const tgl = new Date(artikel.created_at).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+      
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong>${artikel.judul}</strong><br><small style="color:var(--muted)">Oleh: ${artikel.penulis}</small></td>
+        <td>${tgl}</td>
+        <td><span class="status publish">Tersimpan</span></td>
+        <td>
+          <div class="action-btns">
+            <!-- Tombol Edit ditambahkan di sini -->
+            <button class="btn-outline btn-sm" onclick="editArtikel('${artikel.id}')" style="border-color:var(--cyan); color:var(--cyan);">Edit</button>
+            <button class="btn-danger btn-sm" onclick="hapusArtikel('${artikel.id}')">Hapus</button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  muatArtikel(); // Panggil saat pertama kali buka Dashboard
+
+  // --- 6. SIMPAN / UPDATE ARTIKEL (CREATE & UPDATE) ---
+  const form = document.getElementById('formArtikel');
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const btnSubmit = document.getElementById('btnSubmit');
-    btnSubmit.textContent = 'Mengunggah & Menyimpan...';
+    const teksAsli = btnSubmit.innerHTML;
+    btnSubmit.textContent = 'Menyimpan...';
     btnSubmit.disabled = true;
 
     try {
-      let imageUrl = '';
+      let imageUrl = null;
       const fileGambar = document.getElementById('fileGambar').files[0];
 
-      // 1. Proses upload gambar ke Supabase Storage
+      // Upload Gambar Baru (jika ada yang dipilih)
       if (fileGambar) {
         const namaFileUnik = Date.now() + '-' + fileGambar.name.replace(/\s+/g, '-');
-        
         const { data: uploadData, error: uploadError } = await supabaseClient
-          .storage
-          .from('gambar-artikel') 
-          .upload(namaFileUnik, fileGambar);
+          .storage.from('gambar-artikel').upload(namaFileUnik, fileGambar);
 
-        if (uploadError) {
-          throw new Error('Gagal mengunggah gambar: ' + uploadError.message);
-        }
+        if (uploadError) throw new Error('Upload gambar gagal: ' + uploadError.message);
 
         const { data: publicUrlData } = supabaseClient
-          .storage
-          .from('gambar-artikel')
-          .getPublicUrl(uploadData.path);
+          .storage.from('gambar-artikel').getPublicUrl(uploadData.path);
 
         imageUrl = publicUrlData.publicUrl;
       }
 
-      // 2. Kumpulkan data dari form
+      // Kumpulkan data teks dari inputan
       const dataBaru = {
         judul: document.getElementById('judul').value,
         penulis: document.getElementById('penulis').value,
-        gambar_url: imageUrl,
         konten: document.getElementById('konten').value
       };
 
-      // 3. Masukkan data ke database
-      const { error: insertError } = await supabaseClient
-        .from('artikel')
-        .insert([dataBaru]);
-
-      if (insertError) {
-        throw new Error('Gagal menyimpan artikel: ' + insertError.message);
+      // Hanya update gambar_url jika ada file gambar baru yang di-upload
+      if (imageUrl) {
+        dataBaru.gambar_url = imageUrl;
       }
 
-      alert("Artikel dan gambar berhasil dipublikasikan!");
-      
-      // 4. Kosongkan form dan perbarui daftar artikel otomatis
-      form.reset(); 
-      muatArtikel(); 
+      // Tentukan apakah harus UPDATE atau INSERT
+      if (editId) {
+        const { error: updateError } = await supabaseClient
+          .from('artikel')
+          .update(dataBaru)
+          .eq('id', editId);
+        
+        if (updateError) throw new Error('Gagal memperbarui artikel: ' + updateError.message);
+        alert("Artikel berhasil diperbarui!");
+      } else {
+        const { error: insertError } = await supabaseClient
+          .from('artikel')
+          .insert([dataBaru]);
+        
+        if (insertError) throw new Error('Gagal simpan artikel baru: ' + insertError.message);
+        alert("Artikel baru berhasil dipublikasikan!");
+      }
 
+      form.reset(); 
+      switchView('view-manage'); // Kembali ke Daftar Artikel
+      
     } catch (error) {
-      console.error("Terjadi kesalahan:", error);
       alert(error.message);
     } finally {
-      // 5. Kembalikan tombol ke kondisi semula (baik saat sukses maupun gagal)
-      btnSubmit.innerHTML = `Publikasikan Artikel <svg width="15" height="12" viewBox="0 0 16 12" fill="none" style="margin-left: 8px;"><path d="M1 6h13M10 1l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      btnSubmit.innerHTML = teksAsli;
       btnSubmit.disabled = false;
     }
   });
 
-  // 6. Fungsi Hapus Artikel (Berada di luar agar bisa dipanggil oleh tombol HTML)
+  // --- 7. HAPUS ARTIKEL (DELETE) ---
   async function hapusArtikel(id) {
-    if(confirm('Apakah Anda yakin ingin menghapus artikel ini secara permanen?')) {
+    if(confirm('Yakin ingin menghapus artikel ini permanen?')) {
       const { error } = await supabaseClient.from('artikel').delete().eq('id', id);
       if(error) {
         alert('Gagal menghapus: ' + error.message);
       } else {
-        muatArtikel(); // Muat ulang daftar setelah berhasil dihapus
+        muatArtikel();
       }
     }
   }
 </script>
-  </script>
 </body>
 </html>
