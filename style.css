@@ -557,7 +557,6 @@ video, iframe {
   .hv-ring.r1{width:300px;height:300px}.hv-ring.r2{width:230px;height:230px}.hv-ring.r3{width:160px;height:160px}
   .form{padding:26px 20px}
 }
-
 /* --- TAMBAHAN BARU: Khusus untuk layar HP Kecil (maks 480px) --- */
 @media(max-width:480px){
   /* Memperkecil animasi lingkaran agar tidak meluber */
