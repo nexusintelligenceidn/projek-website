@@ -709,3 +709,13 @@ video, iframe {
     .workflow-box { grid-template-columns: 1fr; }
     .price-grid { grid-template-columns: 1fr; }
   }
+  .link-kembali {
+    color: var(--cyan);
+    display: inline-block; /* Wajib ditambahkan agar animasi transform bisa berjalan di tag <a> */
+    transition: transform 0.3s ease; /* Membuat pergerakan animasi membesar lebih mulus */
+    text-decoration: none;
+  }
+  
+  .link-kembali:hover {
+    transform: scale(1.1); /* Memperbesar ukuran teks 10% saat di-hover */
+  }
